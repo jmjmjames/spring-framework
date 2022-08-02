@@ -1,6 +1,7 @@
 package com.exam;
 
 import com.exam.annotation.Controller;
+import com.exam.annotation.Service;
 import com.exam.article.ArticleController;
 import com.exam.home.HomeController;
 import org.reflections.Reflections;
@@ -15,8 +16,27 @@ public class Container {
 
     static {
         objects = new HashMap<>();
-        objects.put(ArticleController.class, new ArticleController());
-        objects.put(HomeController.class, new HomeController());
+
+        scanComponents();
+    }
+
+    private static void scanComponents() {
+        scanService();
+        scanController();
+    }
+
+    private static void scanService() {
+        Reflections reflections = new Reflections("com.exam");
+        for (Class<?> cls : reflections.getTypesAnnotatedWith(Service.class)) {
+            objects.put(cls, Ut.cls.newObj(cls, null));
+        }
+    }
+
+    private static void scanController() {
+        Reflections reflections = new Reflections("com.exam");
+        for (Class<?> cls : reflections.getTypesAnnotatedWith(Controller.class)) {
+            objects.put(cls, Ut.cls.newObj(cls, null));
+        }
     }
 
     public static <T> T getObj(Class<T> cls) {

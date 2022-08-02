@@ -1,6 +1,7 @@
 package com.exam;
 
 import com.exam.article.ArticleController;
+import com.exam.article.ArticleService;
 import com.exam.home.HomeController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,5 +47,19 @@ public class AppTest {
 
         assertThat(names).contains("home");
         assertThat(names).contains("article");
+    }
+
+    @Test
+    void iocArticleService() {
+        ArticleService articleService = Container.getObj(ArticleService.class);
+        assertThat(articleService).isNotNull();
+    }
+
+    @Test
+    void iocArticleService_Singleton() {
+        ArticleService articleService1 = Container.getObj(ArticleService.class);
+        ArticleService articleService2 = Container.getObj(ArticleService.class);
+
+        assertThat(articleService1).isEqualTo(articleService2);
     }
 }
