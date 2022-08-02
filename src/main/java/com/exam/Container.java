@@ -2,13 +2,15 @@ package com.exam;
 
 import com.exam.annotation.AutoWired;
 import com.exam.annotation.Controller;
+import com.exam.annotation.Repository;
 import com.exam.annotation.Service;
+import com.exam.util.Ut;
 import org.reflections.Reflections;
 
 import java.util.*;
 
 public class Container {
-    private static Map<Class, Object> objects;
+    private final static Map<Class, Object> objects;
 
     static {
         objects = new HashMap<>();
@@ -16,8 +18,9 @@ public class Container {
     }
 
     private static void scanComponents() {
-        scanService();
-        scanController();
+        scanRepositories();
+        scanServices();
+        scanControllers();
 
         // 레고 조립
         resolveDependenciesAllComponents();
@@ -45,15 +48,22 @@ public class Container {
                 });
     }
 
-    private static void scanService() {
-        Reflections reflections = new Reflections("com.exam");
+    private static void scanRepositories() {
+        Reflections reflections = new Reflections(App.BASE_PACKAGE_PATH);
+        for (Class<?> cls : reflections.getTypesAnnotatedWith(Repository.class)) {
+            objects.put(cls, Ut.cls.newObj(cls, null));
+        }
+    }
+
+    private static void scanServices() {
+        Reflections reflections = new Reflections(App.BASE_PACKAGE_PATH);
         for (Class<?> cls : reflections.getTypesAnnotatedWith(Service.class)) {
             objects.put(cls, Ut.cls.newObj(cls, null));
         }
     }
 
-    private static void scanController() {
-        Reflections reflections = new Reflections("com.exam");
+    private static void scanControllers() {
+        Reflections reflections = new Reflections(App.BASE_PACKAGE_PATH);
         for (Class<?> cls : reflections.getTypesAnnotatedWith(Controller.class)) {
             objects.put(cls, Ut.cls.newObj(cls, null));
         }
@@ -65,7 +75,7 @@ public class Container {
 
     public static List<String> getControllerNames() {
         ArrayList<String> names = new ArrayList<>();
-        Reflections reflections = new Reflections("com.exam");
+        Reflections reflections = new Reflections(App.BASE_PACKAGE_PATH);
         for (Class<?> cls : reflections.getTypesAnnotatedWith(Controller.class)) {
             String name = cls.getSimpleName();
             name = name.replace("Controller", "");

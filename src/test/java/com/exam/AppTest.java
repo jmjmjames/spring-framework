@@ -1,12 +1,12 @@
 package com.exam;
 
-import com.exam.annotation.AutoWired;
 import com.exam.article.ArticleController;
+import com.exam.article.ArticleRepository;
 import com.exam.article.ArticleService;
 import com.exam.home.HomeController;
+import com.exam.util.Ut;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.reflections.Reflections;
 
 import java.util.List;
 
@@ -69,8 +69,18 @@ public class AppTest {
     @DisplayName("컨트롤러에 서비스 주입 확인")
     void iocArticleController_ArticleServiceInjection() {
         ArticleController articleController = Container.getObj(ArticleController.class);
-        ArticleService articleService = articleController.getArticleService();
+        ArticleService articleService = Ut.reflection
+                .getFieldValue(articleController, "articleService", null);
 
         assertThat(articleService).isNotNull();
-        }
     }
+
+    @Test
+    @DisplayName("서비스에 리포지토리 주입 확인")
+    void iocArticleService_ArticleRepositoryInjection() {
+        ArticleService articleService = Container.getObj(ArticleService.class);
+        ArticleRepository articleRepository = Ut.reflection.getFieldValue(articleService, "articleRepository", null);
+
+        assertThat(articleRepository).isNotNull();
+    }
+}

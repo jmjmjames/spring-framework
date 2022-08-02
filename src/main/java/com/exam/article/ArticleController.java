@@ -6,7 +6,6 @@ import com.exam.annotation.GetMapping;
 import lombok.Getter;
 
 @Controller
-@Getter
 public class ArticleController {
 
     @AutoWired
