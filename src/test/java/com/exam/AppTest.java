@@ -19,23 +19,23 @@ public class AppTest {
 
     @Test
     void iocArticleController() {
-        ArticleController articleController = Container.getArticleController();
+        ArticleController articleController = Container.getObj(ArticleController.class);
         assertThat(articleController).isNotNull();
     }
 
     @Test
     @DisplayName("싱글톤 체크")
     void iocArticleController_SingleTon() {
-        ArticleController articleController1 = Container.getArticleController();
-        ArticleController articleController2 = Container.getArticleController();
+        ArticleController articleController1 = Container.getObj(ArticleController.class);
+        ArticleController articleController2 = Container.getObj(ArticleController.class);
         assertThat(articleController1).isEqualTo(articleController2);
     }
 
     @Test
     @DisplayName("싱글톤 체크")
     void iocHomeController_SingleTon() {
-        HomeController homeController1 = Container.getHomeController();
-        HomeController homeController2 = Container.getHomeController();
+        HomeController homeController1 = Container.getObj(HomeController.class);
+        HomeController homeController2 = Container.getObj(HomeController.class);
         assertThat(homeController1).isEqualTo(homeController2);
     }
 
