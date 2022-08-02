@@ -1,28 +1,48 @@
 package com.exam;
 
+import com.exam.annotation.AutoWired;
 import com.exam.annotation.Controller;
 import com.exam.annotation.Service;
-import com.exam.article.ArticleController;
-import com.exam.home.HomeController;
 import org.reflections.Reflections;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Container {
     private static Map<Class, Object> objects;
 
     static {
         objects = new HashMap<>();
-
         scanComponents();
     }
 
     private static void scanComponents() {
         scanService();
         scanController();
+
+        // 레고 조립
+        resolveDependenciesAllComponents();
+    }
+
+    private static void resolveDependenciesAllComponents() {
+        for (Class cls : objects.keySet()) {
+            Object o = objects.get(cls);
+            resolveDependencies(o);
+        }
+    }
+
+    private static void resolveDependencies(Object obj) {
+        Arrays.stream(obj.getClass().getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(AutoWired.class))
+                .peek(field -> field.setAccessible(true))
+                .forEach(field -> {
+                    Class<?> cls = field.getType();
+                    Object dependency = objects.get(cls);
+                    try {
+                        field.set(obj, dependency);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     private static void scanService() {

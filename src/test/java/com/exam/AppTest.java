@@ -1,10 +1,12 @@
 package com.exam;
 
+import com.exam.annotation.AutoWired;
 import com.exam.article.ArticleController;
 import com.exam.article.ArticleService;
 import com.exam.home.HomeController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.reflections.Reflections;
 
 import java.util.List;
 
@@ -62,4 +64,13 @@ public class AppTest {
 
         assertThat(articleService1).isEqualTo(articleService2);
     }
-}
+
+    @Test
+    @DisplayName("컨트롤러에 서비스 주입 확인")
+    void iocArticleController_ArticleServiceInjection() {
+        ArticleController articleController = Container.getObj(ArticleController.class);
+        ArticleService articleService = articleController.getArticleService();
+
+        assertThat(articleService).isNotNull();
+        }
+    }
