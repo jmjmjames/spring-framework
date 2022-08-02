@@ -16,6 +16,12 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
 
+    // 컴포넌트 스캔 https://mvnrepository.com/artifact/org.reflections/reflections
+    implementation 'org.reflections:reflections:0.10.2'
+
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-nop
+    implementation 'org.slf4j:slf4j-nop:1.7.36'
+
     // https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
