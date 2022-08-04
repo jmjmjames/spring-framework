@@ -4,11 +4,12 @@ import com.exam.article.ArticleController;
 import com.exam.article.ArticleRepository;
 import com.exam.article.ArticleService;
 import com.exam.home.HomeController;
-import com.exam.util.Ut;
+import com.exam.util.Util;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -69,7 +70,7 @@ public class AppTest {
     @DisplayName("컨트롤러에 서비스 주입 확인")
     void iocArticleController_ArticleServiceInjection() {
         ArticleController articleController = Container.getObj(ArticleController.class);
-        ArticleService articleService = Ut.reflection
+        ArticleService articleService = Util.reflection
                 .getFieldValue(articleController, "articleService", null);
 
         assertThat(articleService).isNotNull();
@@ -79,8 +80,15 @@ public class AppTest {
     @DisplayName("서비스에 리포지토리 주입 확인")
     void iocArticleService_ArticleRepositoryInjection() {
         ArticleService articleService = Container.getObj(ArticleService.class);
-        ArticleRepository articleRepository = Ut.reflection.getFieldValue(articleService, "articleRepository", null);
+        ArticleRepository articleRepository = Util.reflection.getFieldValue(articleService, "articleRepository", null);
 
         assertThat(articleRepository).isNotNull();
+    }
+
+    @Test
+    public void ControllerManager__라우트정보_개수() {
+        Map<String, RouteInfo> routeInfos = ControllerManager.getRouteInfosForTest();
+
+        assertThat(routeInfos.size()).isEqualTo(4);
     }
 }

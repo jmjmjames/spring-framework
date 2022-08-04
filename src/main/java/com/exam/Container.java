@@ -4,7 +4,7 @@ import com.exam.annotation.AutoWired;
 import com.exam.annotation.Controller;
 import com.exam.annotation.Repository;
 import com.exam.annotation.Service;
-import com.exam.util.Ut;
+import com.exam.util.Util;
 import org.reflections.Reflections;
 
 import java.util.*;
@@ -51,21 +51,21 @@ public class Container {
     private static void scanRepositories() {
         Reflections reflections = new Reflections(App.BASE_PACKAGE_PATH);
         for (Class<?> cls : reflections.getTypesAnnotatedWith(Repository.class)) {
-            objects.put(cls, Ut.cls.newObj(cls, null));
+            objects.put(cls, Util.cls.newObj(cls, null));
         }
     }
 
     private static void scanServices() {
         Reflections reflections = new Reflections(App.BASE_PACKAGE_PATH);
         for (Class<?> cls : reflections.getTypesAnnotatedWith(Service.class)) {
-            objects.put(cls, Ut.cls.newObj(cls, null));
+            objects.put(cls, Util.cls.newObj(cls, null));
         }
     }
 
     private static void scanControllers() {
         Reflections reflections = new Reflections(App.BASE_PACKAGE_PATH);
         for (Class<?> cls : reflections.getTypesAnnotatedWith(Controller.class)) {
-            objects.put(cls, Ut.cls.newObj(cls, null));
+            objects.put(cls, Util.cls.newObj(cls, null));
         }
     }
 
@@ -79,7 +79,7 @@ public class Container {
         for (Class<?> cls : reflections.getTypesAnnotatedWith(Controller.class)) {
             String name = cls.getSimpleName();
             name = name.replace("Controller", "");
-            name = Ut.str.decapitalize(name);
+            name = Util.str.decapitalize(name);
             names.add(name);
         }
         return names;
