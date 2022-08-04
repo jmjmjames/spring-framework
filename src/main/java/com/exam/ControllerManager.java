@@ -77,8 +77,15 @@ public class ControllerManager {
 
         try {
             actionMethod.invoke(controllerObj, rq);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException e) {
             rq.writeln("액션시작에 실패하였습니다.");
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } finally {
+            MyMap myMap = Container.getObj(MyMap.class);
+            myMap.closeConnection();
+            // 현재 쓰레드에 할당된 커넥션을 닫는다.
+            // 커넥션을 닫지 않으면 ->  매 요청마다, DB 요청이 쌓인다.
         }
     }
 
