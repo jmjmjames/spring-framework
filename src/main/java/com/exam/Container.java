@@ -4,6 +4,7 @@ import com.exam.annotation.AutoWired;
 import com.exam.annotation.Controller;
 import com.exam.annotation.Repository;
 import com.exam.annotation.Service;
+import com.exam.mymap.MyMap;
 import com.exam.util.Util;
 import org.reflections.Reflections;
 
@@ -21,9 +22,14 @@ public class Container {
         scanRepositories();
         scanServices();
         scanControllers();
+        scanCustom();
 
         // 레고 조립
         resolveDependenciesAllComponents();
+    }
+
+    private static void scanCustom() {
+        objects.put(MyMap.class, new MyMap(App.DB_HOST, App.DB_PORT, App.DB_USERNAME, App.DB_PASSWORD, App.DB_NAME));
     }
 
     private static void resolveDependenciesAllComponents() {
