@@ -1,7 +1,6 @@
 package com.exam;
 
-import com.exam.annotation.Controller;
-import com.exam.annotation.GetMapping;
+import com.exam.annotation.*;
 import com.exam.mymap.MyMap;
 import com.exam.util.Util;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,10 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ControllerManager {
-    private static Map<String, RouteInfo> routeInfos;
+    private static final Map<String, RouteInfo> routeInfos = new HashMap<>();
 
     static {
-        routeInfos = new HashMap<>();
         scanMappings();
     }
 
@@ -28,6 +26,9 @@ public class ControllerManager {
 
             for (Method method : methods) {
                 GetMapping getMapping = method.getAnnotation(GetMapping.class);
+                PostMapping postMapping = method.getAnnotation(PostMapping.class);
+                PutMapping putMapping = method.getAnnotation(PutMapping.class);
+                DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
 
                 String httpMethod = null;
                 String path = null;
@@ -35,7 +36,17 @@ public class ControllerManager {
                 if (getMapping != null) {
                     path = getMapping.value();
                     httpMethod = "GET";
+                } else if (postMapping != null) {
+                    path = postMapping.value();
+                    httpMethod = "POST";
+                } else if (putMapping != null) {
+                    path = putMapping.value();
+                    httpMethod = "POST";
+                } else if (deleteMapping != null) {
+                    path = deleteMapping.value();
+                    httpMethod = "DELETE";
                 }
+
                 if (path != null && httpMethod != null) {
                     String actionPath = Util.str.beforeFrom(path, "/", 4);
 
